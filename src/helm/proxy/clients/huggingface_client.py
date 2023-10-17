@@ -178,15 +178,15 @@ def _process_huggingface_client_kwargs(raw_kwargs: Dict[str, Any]):
     Since the kwargs from HuggingFaceClient may be derived from configuration YAML,
     they may contain primitive types instead of the unserializable types that
     AutoModel.from_pretrained() expects (e.g. torch_dtype). This function converts values of
-    primitive types to values of the unserualizable types."""
+    primitive types to values of the unserializable types."""
     processed_kwargs = deepcopy(raw_kwargs)
 
     # Convert torch_dtype string value to actual dtypes
-    # e.g. the string "torch.float16" is converted to torch.float16
+    # e.g. the string "torch.bfloat16" is converted to torch.bfloat16
     torch_dtype = processed_kwargs.get(TORCH_DTYPE_KEY)
     if torch_dtype and isinstance(torch_dtype, str):
         if not torch_dtype.startswith(TORCH_DTYPE_VALUE_PREFIX):
-            raise ValueError(f'Unknown dtype {torch_dtype}; expected a string such as "torch.float32"')
+            raise ValueError(f'Unknown dtype "{torch_dtype}"; expected a string such as "torch.bfloat16"')
         processed_kwargs[TORCH_DTYPE_KEY] = getattr(torch, torch_dtype[len(TORCH_DTYPE_VALUE_PREFIX) :])
 
     return processed_kwargs
